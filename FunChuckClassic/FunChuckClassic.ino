@@ -1,15 +1,6 @@
 #include <WiiChuck.h>
 Accessory nunchuck1;
 
-int lastLeftJoyX = 128;
-int leftJoyX = 128;
-int lastLeftJoyY = 128;
-int leftJoyY = 128;
-int lastRightJoyX = 128;
-int rightJoyX = 128;
-int lastRightJoyY = 128;
-int rightJoyY = 128;
-
 int lastXButton = 0;
 int xButton = 0;
 int lastYButton = 0;
@@ -19,50 +10,38 @@ int aButton = 0;
 int lastBButton = 0;
 int bButton = 0;
 
+int lastLButton = 0;
+int lButton = 0;
+int lastZlButton = 0;
+int zlButton = 0;
+int lastRButton = 0;
+int rButton = 0;
+int lastZrButton = 0;
+int zrButton = 0;
+
+int rollButtonPin = 33;
+int pitchButtonPin = 34;
+int switchPin = 37;
+
 void setup() {
   Serial.begin(9600);
+  pinMode(rollButtonPin, INPUT);
+  pinMode(pitchButtonPin, INPUT);
+  pinMode(switchPin, INPUT);
   nunchuck1.begin();
   nunchuck1.type = WIICLASSIC;
 }
 
 void loop() {
   nunchuck1.readData();
-  checkLeftX();
-  checkLeftY();
-  checkRightX();
-  checkRightY();
   checkXButton();
   checkYButton();
   checkAButton();
   checkBButton();
-}
-
-void checkLeftX() {
-  leftJoyX = nunchuck1.values[0];
-  if (leftJoyX != lastLeftJoyX) {
-  }
-  lastLeftJoyX = leftJoyX;
-}
-
-void checkLeftY() {
-  leftJoyY = nunchuck1.values[1];
-  if (leftJoyY != lastLeftJoyY) {
-  }
-  lastLeftJoyY = leftJoyY;
-}
-
-void checkRightX() {
-  rightJoyX = nunchuck1.values[2];
-  if (rightJoyX != lastRightJoyX) {
-  }
-  lastRightJoyX = rightJoyX;
-}
-
-void checkRightY() {
-  rightJoyY = nunchuck1.values[3];
-  if (rightJoyY != lastRightJoyY) {
-  }
-  lastRightJoyY = rightJoyY;
+  checkLButton();
+  checkRButton();
+  checkZrButton();
+  checkZlButton();
 }
 
 void checkXButton() {
@@ -117,7 +96,59 @@ void checkBButton() {
   lastBButton = bButton;
 }
 
+void checkLButton() {
+  lButton = nunchuck1.values[11];
+  if (lButton > 0 and lastLButton == 0) {
+    usbMIDI.sendNoteOn(40, 127, 1);
+    delay(5);
+  }
+  if (lButton == 0 and lButton != lastLButton) {
+    usbMIDI.sendNoteOff(40, 127, 1);
+    delay(5);
+  }
+  lastLButton = lButton;
+}
 
+void checkRButton() {
+  rButton = nunchuck1.values[17];
+  if (rButton > 0 and lastRButton == 0) {
+    usbMIDI.sendNoteOn(43, 127, 1);
+    delay(5);
+  }
+  if (rButton == 0 and rButton != lastRButton) {
+    usbMIDI.sendNoteOff(43, 127, 1);
+    delay(5);
+  }
+  lastRButton = rButton;
+}
+
+void checkZlButton() {
+  zlButton = nunchuck1.values[10];
+  if (zlButton == 255 and zlButton != lastZlButton) {
+    usbMIDI.sendNoteOn(41, 127, 1);
+    delay(5);
+  }
+  if (zlButton == 0 and zlButton != lastZlButton) {
+    usbMIDI.sendNoteOff(41, 127, 1);
+    delay(5);
+  }
+  lastZlButton = zlButton;
+}
+
+void checkZrButton() {
+  zrButton = nunchuck1.values[18];
+  if (zrButton == 255 and zrButton != lastZrButton) {
+    usbMIDI.sendNoteOn(42, 127, 1);
+    delay(5);
+  }
+  if (zrButton == 0 and zrButton != lastZrButton) {
+    usbMIDI.sendNoteOff(42, 127, 1);
+    delay(5);
+  }
+  lastZrButton = zrButton;
+}
+
+//Use - and + to set effects on joysticks, home switches between x and y
 
 // values[0]=JoyXLeft
 // values[1]=JoyYLeft
