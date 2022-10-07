@@ -1,6 +1,15 @@
 #include <WiiChuck.h>
 Accessory nunchuck1;
 
+int joyLeftXVal = 0;
+int joyLeftYVal = 0;
+int joyRightXVal = 0;
+int joyRightYVal = 0;
+bool directionSwitch = true;
+int homeButtonVal = 0;
+int lastHomeButtonVal = 0;
+int joyAdd = 0;
+
 int lastXButton = 0;
 int xButton = 0;
 int lastYButton = 0;
@@ -42,6 +51,9 @@ void loop() {
   checkRButton();
   checkZrButton();
   checkZlButton();
+  checkHomeButton();
+  checkMinusPlus();
+  joyEffects();
 }
 
 void checkXButton() {
@@ -148,7 +160,108 @@ void checkZrButton() {
   lastZrButton = zrButton;
 }
 
-//Use - and + to set effects on joysticks, home switches between x and y
+void checkHomeButton() {
+  homeButtonVal = nunchuck1.values[15];
+  if (homeButtonVal == 255 and lastHomeButtonVal != homeButtonVal) {
+    directionSwitch = ! directionSwitch;
+  }
+  lastHomeButtonVal = homeButtonVal;
+}
+
+void checkMinusPlus() {
+  if (nunchuck1.values[14] == 0) {
+    if (directionSwitch == true) {
+      usbMIDI.sendControlChange(1, joyLeftXVal, 0);
+    } else {
+      usbMIDI.sendControlChange(2, joyLeftYVal, 0);
+    }
+  }
+  if (nunchuck1.values[14] == 255) {
+    if (directionSwitch == true) {
+      usbMIDI.sendControlChange(3, joyRightXVal, 0);
+    } else {
+      usbMIDI.sendControlChange(4, joyRightYVal, 0);
+    }
+  }
+}
+
+void joyLeftXEffect() {
+  if (nunchuck1.values[0] >= 132 or nunchuck1.values[0] <= 124) {
+    joyLeftXVal = joyLeftXVal + map(nunchuck1.values[0], 0, 256, -15, 15);
+    if (joyLeftXVal > 127) {
+      joyLeftXVal = 127;
+    }
+    if (joyLeftXVal < 0) {
+      joyLeftXVal = 0;
+    }
+    usbMIDI.sendControlChange(1, joyLeftXVal, 0);
+    delay(25);
+  }
+}
+
+void joyLeftYEffect() {
+  if (nunchuck1.values[1] >= 132 or nunchuck1.values[1] <= 124) {
+    joyLeftYVal = joyLeftYVal + map(nunchuck1.values[1], 0, 256, -15, 15);
+    if (joyLeftYVal > 127) {
+      joyLeftYVal = 127;
+    }
+    if (joyLeftYVal < 0) {
+      joyLeftYVal = 0;
+    }
+    usbMIDI.sendControlChange(2, joyLeftYVal, 0);
+    delay(25);
+  }
+}
+
+void joyEffects() {
+  if (nunchuck1.values[0] >= 132 or nunchuck1.values[0] <= 124 or nunchuck1.values[1] >= 132 or nunchuck1.values[1] <= 124 or nunchuck1.values[2] >= 132 or nunchuck1.values[2] <= 124 or nunchuck1.values[3] >= 132 or nunchuck1.values[3] <= 124) {
+    if (nunchuck1.values[0] >= 132 or nunchuck1.values[0] <= 124) {
+      joyLeftXVal = joyLeftXVal + map(nunchuck1.values[0], 0, 256, -15, 15);
+      if (joyLeftXVal > 127) {
+        joyLeftXVal = 127;
+      }
+      if (joyLeftXVal < 0) {
+        joyLeftXVal = 0;
+      }
+      usbMIDI.sendControlChange(1, joyLeftXVal, 0);
+    }
+
+    if (nunchuck1.values[1] >= 132 or nunchuck1.values[1] <= 124) {
+      joyLeftYVal = joyLeftYVal + map(nunchuck1.values[1], 0, 256, -15, 15);
+      if (joyLeftYVal > 127) {
+        joyLeftYVal = 127;
+      }
+      if (joyLeftYVal < 0) {
+        joyLeftYVal = 0;
+      }
+      usbMIDI.sendControlChange(2, joyLeftYVal, 0);
+    }
+
+    if (nunchuck1.values[2] >= 132 or nunchuck1.values[2] <= 124) {
+      joyRightXVal = joyRightXVal + map(nunchuck1.values[2], 0, 256, -15, 15);
+      if (joyRightXVal > 127) {
+        joyRightXVal = 127;
+      }
+      if (joyRightXVal < 0) {
+        joyRightXVal = 0;
+      }
+      usbMIDI.sendControlChange(3, joyRightXVal, 0);
+    }
+
+    if (nunchuck1.values[3] >= 132 or nunchuck1.values[3] <= 124) {
+      joyRightYVal = joyRightYVal + map(nunchuck1.values[3], 0, 256, -15, 15);
+      if (joyRightYVal > 127) {
+        joyRightYVal = 127;
+      }
+      if (joyRightYVal < 0) {
+        joyRightYVal = 0;
+      }
+      usbMIDI.sendControlChange(4, joyRightYVal, 0);
+    }
+
+    delay(25);
+  }
+}
 
 // values[0]=JoyXLeft
 // values[1]=JoyYLeft
