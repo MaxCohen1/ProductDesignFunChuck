@@ -79,7 +79,6 @@ void checkC() {
 }
 
 void checkRoll() {
-  //  Serial.println(nunchuck1.values[4]);
   rollStep = map(nunchuck1.values[4], 75, 172, 0, 127); //converts tilt data to midi range
   if (rollStep > 127) {
     rollStep = 127;
@@ -171,8 +170,6 @@ void checkJoyX() {
     }
   }
 }
-
-//Consolidate joy effects functions
 
 void xJoyEffect() {
   if (nunchuck1.values[0] >= 130 or nunchuck1.values[0] <= 124) {

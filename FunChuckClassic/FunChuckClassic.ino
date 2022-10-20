@@ -262,15 +262,3 @@ void joyEffects() {
     delay(25);
   }
 }
-
-// values[0]=JoyXLeft
-// values[1]=JoyYLeft
-// values[2]=JoyXRight
-// values[3]=JoyYRight
-// values[4]=Nothing
-// values[5]=Nothing
-// values[6]=Broken D Pad (?)
-// values[7]=Broken D Pad (?)
-// values[8]=X Button
-// values[9]=Y Button
-// values[10]=ZL
