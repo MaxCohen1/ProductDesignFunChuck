@@ -1,15 +1,15 @@
 #include <WiiChuck.h>
 Accessory nunchuck1;
 
-bool zState = HIGH;
-bool lastZState = HIGH;
-int currentNote = 60;
-int lastNote = 60;
+bool zStateNun = HIGH;
+bool lastZStateNun = HIGH;
+int currentNoteNun = 60;
+int lastNoteNun = 60;
 
-int yJoyVal = 127;
-int lastYJoyVal = 127;
-int xJoyVal = 127;
-int lastXJoyVal = 127;
+int yJoyValNun = 127;
+int lastYJoyValNun = 127;
+int xJoyValNun = 127;
+int lastXJoyValNun = 127;
 
 int rollValue = 0;
 int rollStep = 0;
@@ -21,15 +21,12 @@ int pitchStep = 0;
 int pitchCount = 0;
 int pitchTotal = 0;
 
-int rollButtonPin = 33;
-int pitchButtonPin = 34;
+int xJoyEffectValNun = 63;
+int yJoyEffectValNun = 63;
+
+int button1 = 34;
+int button2 = 33;
 int switchPin = 37;
-
-int xJoyEffectVal = 63;
-int xJoyValConvert = 0;
-
-int yJoyEffectVal = 63;
-int yJoyValConvert = 0;
 
 void setup() {
   Serial.begin(9600);
@@ -43,42 +40,42 @@ void setup() {
 void loop() {
   usbMIDI.read();
   nunchuck1.readData();
-  checkZ();
-  checkC();
-  if (digitalRead(switchPin) == HIGH) {
-    checkJoyX();
-    checkJoyY();
+  checkZNun();
+  checkCNun();
+  if (digitalRead(switchPin) == LOW) {
+    checkJoyXNun();
+    checkJoyYNun();
   } else {
-    xJoyEffect();
-    yJoyEffect();
+    xJoyEffectNun();
+    yJoyEffectNun();
   }
-  setEffects();
+  setEffectsNun();
 }
 
-void checkZ() {
-  lastZState = zState;
+void checkZNun() {
+  lastZStateNun = zStateNun;
   if (nunchuck1.values[10] == 0) {
-    zState = LOW;
+    zStateNun = LOW;
   } else if (nunchuck1.values[10] == 255) {
-    zState = HIGH;
+    zStateNun = HIGH;
   }
-  if (zState == HIGH and lastZState == LOW) {
-    usbMIDI.sendNoteOn(currentNote, 127, 1);
+  if (zStateNun == HIGH and lastZStateNun == LOW) {
+    usbMIDI.sendNoteOn(currentNoteNun, 127, 1);
     delay(5);
-  } else if (zState == LOW and lastZState == HIGH) {
-    usbMIDI.sendNoteOff(currentNote, 0, 1);
+  } else if (zStateNun == LOW and lastZStateNun == HIGH) {
+    usbMIDI.sendNoteOff(currentNoteNun, 0, 1);
     delay(5);
   }
 }
 
-void checkC() {
+void checkCNun() {
   if (nunchuck1.values[11] == 255) {
-    checkRoll();
-    checkPitch();
+    checkRollNun();
+    checkPitchNun();
   }
 }
 
-void checkRoll() {
+void checkRollNun() {
   rollStep = map(nunchuck1.values[4], 75, 172, 0, 127); //converts tilt data to midi range
   if (rollStep > 127) {
     rollStep = 127;
@@ -95,7 +92,7 @@ void checkRoll() {
   }
 }
 
-void checkPitch() {
+void checkPitchNun() {
   //Serial.println(nunchuck1.values[5]);
   pitchStep = map(nunchuck1.values[5], 80, 155, 0, 127);
   if (pitchStep > 127) {
@@ -113,92 +110,90 @@ void checkPitch() {
   }
 }
 
-void setEffects() {
-  if (digitalRead(switchPin) == HIGH) {
-    if (digitalRead(rollButtonPin) == HIGH) {
+void setEffectsNun() {
+  if (digitalRead(switchPin) == LOW) {
+    if (digitalRead(button1) == HIGH) {
       usbMIDI.sendControlChange(1, rollValue, 0);
     }
-    if (digitalRead(pitchButtonPin) == HIGH) {
+    if (digitalRead(button2) == HIGH) {
       usbMIDI.sendControlChange(2, pitchValue, 0);
     }
   } else {
-    if (digitalRead(rollButtonPin) == HIGH) {
-      usbMIDI.sendControlChange(3, xJoyEffectVal, 0);
+    if (digitalRead(button1) == HIGH) {
+      usbMIDI.sendControlChange(3, xJoyEffectValNun, 0);
     }
-    if (digitalRead(pitchButtonPin) == HIGH) {
-      usbMIDI.sendControlChange(4, yJoyEffectVal, 0);
-    }
-  }
-}
-
-void checkJoyY() {
-  lastYJoyVal = yJoyVal;
-  yJoyVal = nunchuck1.values[1];
-  if ((yJoyVal == 255) and (lastYJoyVal != yJoyVal)) {
-    lastNote = currentNote; //changes note before turning off previous note for smooth playing
-    currentNote = currentNote + 12;
-    if (zState == HIGH) {
-      usbMIDI.sendNoteOn(currentNote, 127, 1);
-      usbMIDI.sendNoteOff(lastNote, 0, 1);
-    }
-  } else if ((yJoyVal == 0) and (lastYJoyVal != yJoyVal)) {
-    lastNote = currentNote;
-    currentNote = currentNote - 12;
-    if (zState == HIGH) {
-      usbMIDI.sendNoteOn(currentNote, 127, 1);
-      usbMIDI.sendNoteOff(lastNote, 0, 1);
+    if (digitalRead(button2) == HIGH) {
+      usbMIDI.sendControlChange(4, yJoyEffectValNun, 0);
     }
   }
 }
 
-void checkJoyX() {
-  lastXJoyVal = xJoyVal;
-  xJoyVal = nunchuck1.values[0];
-  if ((xJoyVal == 255) and (lastXJoyVal != xJoyVal)) {
-    lastNote = currentNote;
-    currentNote = currentNote + 1;
-    if (zState == HIGH) {
-      usbMIDI.sendNoteOn(currentNote, 127, 1);
-      usbMIDI.sendNoteOff(lastNote, 0, 1);
+void checkJoyYNun() {
+  lastYJoyValNun = yJoyValNun;
+  yJoyValNun = nunchuck1.values[1];
+  if ((yJoyValNun == 255) and (lastYJoyValNun != yJoyValNun)) {
+    lastNoteNun = currentNoteNun; //changes note before turning off previous note for smooth playing
+    currentNoteNun = currentNoteNun + 12;
+    if (zStateNun == HIGH) {
+      usbMIDI.sendNoteOn(currentNoteNun, 127, 1);
+      usbMIDI.sendNoteOff(lastNoteNun, 0, 1);
     }
-  } else if ((xJoyVal == 0) and (lastXJoyVal != xJoyVal)) {
-    lastNote = currentNote;
-    currentNote = currentNote - 1;
-    if (zState == HIGH) {
-      usbMIDI.sendNoteOn(currentNote, 127, 1);
-      usbMIDI.sendNoteOff(lastNote, 0, 1);
+  } else if ((yJoyValNun == 0) and (lastYJoyValNun != yJoyValNun)) {
+    lastNoteNun = currentNoteNun;
+    currentNoteNun = currentNoteNun - 12;
+    if (zStateNun == HIGH) {
+      usbMIDI.sendNoteOn(currentNoteNun, 127, 1);
+      usbMIDI.sendNoteOff(lastNoteNun, 0, 1);
     }
   }
 }
 
-void xJoyEffect() {
+void checkJoyXNun() {
+  lastXJoyValNun = xJoyValNun;
+  xJoyValNun = nunchuck1.values[0];
+  if ((xJoyValNun == 255) and (lastXJoyValNun != xJoyValNun)) {
+    lastNoteNun = currentNoteNun;
+    currentNoteNun = currentNoteNun + 1;
+    if (zStateNun == HIGH) {
+      usbMIDI.sendNoteOn(currentNoteNun, 127, 1);
+      usbMIDI.sendNoteOff(lastNoteNun, 0, 1);
+    }
+  } else if ((xJoyValNun == 0) and (lastXJoyValNun != xJoyValNun)) {
+    lastNoteNun = currentNoteNun;
+    currentNoteNun = currentNoteNun - 1;
+    if (zStateNun == HIGH) {
+      usbMIDI.sendNoteOn(currentNoteNun, 127, 1);
+      usbMIDI.sendNoteOff(lastNoteNun, 0, 1);
+    }
+  }
+}
+
+void xJoyEffectNun() {
   if (nunchuck1.values[0] >= 130 or nunchuck1.values[0] <= 124) {
-    xJoyVal = nunchuck1.values[0];
-    xJoyValConvert = map(xJoyVal, 0, 255, -15, 15);
-    xJoyEffectVal = xJoyEffectVal + xJoyValConvert;
-    if (xJoyEffectVal > 127) {
-      xJoyEffectVal = 127;
+    xJoyValNun = map(nunchuck1.values[0], 0, 255, -15, 15);
+    xJoyEffectValNun = xJoyEffectValNun + xJoyValNun;
+    if (xJoyEffectValNun > 127) {
+      xJoyEffectValNun = 127;
     }
-    if (xJoyEffectVal < 0) {
-      xJoyEffectVal = 0;
+    if (xJoyEffectValNun < 0) {
+      xJoyEffectValNun = 0;
     }
-    usbMIDI.sendControlChange(3, xJoyEffectVal, 0);
+    usbMIDI.sendControlChange(3, xJoyEffectValNun, 0);
     delay(25);
   }
 }
 
-void yJoyEffect() {
+void yJoyEffectNun() {
   if (nunchuck1.values[1] >= 130 or nunchuck1.values[1] <= 124) {
-    yJoyVal = nunchuck1.values[1];
-    yJoyValConvert = map(yJoyVal, 0, 255, -15, 15);
-    yJoyEffectVal = yJoyEffectVal + yJoyValConvert;
-    if (yJoyEffectVal > 127) {
-      yJoyEffectVal = 127;
+    yJoyValNun = map(nunchuck1.values[1], 0, 255, -15, 15);
+    yJoyEffectValNun = yJoyEffectValNun + yJoyValNun;
+    if (yJoyEffectValNun > 127) {
+      yJoyEffectValNun = 127;
     }
-    if (yJoyEffectVal < 0) {
-      yJoyEffectVal = 0;
+    if (yJoyEffectValNun < 0) {
+      yJoyEffectValNun = 0;
     }
-    usbMIDI.sendControlChange(4, yJoyEffectVal, 0);
+    usbMIDI.sendControlChange(4, yJoyEffectValNun, 0);
     delay(25);
   }
 }

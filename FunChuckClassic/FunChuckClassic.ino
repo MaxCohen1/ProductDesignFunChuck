@@ -1,63 +1,55 @@
 #include <WiiChuck.h>
-Accessory nunchuck1;
+Accessory classic1;
 
-int joyLeftXVal = 0;
-int joyLeftYVal = 0;
-int joyRightXVal = 0;
-int joyRightYVal = 0;
-bool directionSwitch = true;
-int homeButtonVal = 0;
-int lastHomeButtonVal = 0;
-int joyAdd = 0;
+int joyLeftXValClassic = 0;
+int joyLeftYValClassic = 0;
+int joyRightXValClassic = 0;
+int joyRightYValClassic = 0;
+bool directionSwitchClassic = true;
+int homeButtonValClassic = 0;
+int lastHomeButtonValClassic = 0;
 
-int lastXButton = 0;
-int xButton = 0;
-int lastYButton = 0;
-int yButton = 0;
-int lastAButton = 0;
-int aButton = 0;
-int lastBButton = 0;
-int bButton = 0;
+int lastXButtonClassic = 0;
+int xButtonClassic = 0;
+int lastYButtonClassic = 0;
+int yButtonClassic = 0;
+int lastAButtonClassic = 0;
+int aButtonClassic = 0;
+int lastBButtonClassic = 0;
+int bButtonClassic = 0;
 
-int lastLButton = 0;
-int lButton = 0;
-int lastZlButton = 0;
-int zlButton = 0;
-int lastRButton = 0;
-int rButton = 0;
-int lastZrButton = 0;
-int zrButton = 0;
-
-int rollButtonPin = 33;
-int pitchButtonPin = 34;
-int switchPin = 37;
+int lastLButtonClassic = 0;
+int lButtonClassic = 0;
+int lastZlButtonClassic = 0;
+int zlButtonClassic = 0;
+int lastRButtonClassic = 0;
+int rButtonClassic = 0;
+int lastZrButtonClassic = 0;
+int zrButtonClassic = 0;
 
 void setup() {
   Serial.begin(9600);
-  pinMode(rollButtonPin, INPUT);
-  pinMode(pitchButtonPin, INPUT);
-  pinMode(switchPin, INPUT);
-  nunchuck1.begin();
-  nunchuck1.type = WIICLASSIC;
+  classic1.begin();
+  classic1.type = WIICLASSIC;
 }
 
 void loop() {
-  nunchuck1.readData();
-  checkButton(8, xButton, lastXButton, 38);
-  checkButton(9, yButton, lastYButton, 39);
-  checkButton(12, aButton, lastAButton, 36);
-  checkButton(13, bButton, lastBButton, 37);
-  checkButton(11, lButton, lastLButton, 40);
-  checkButton(17, rButton, lastRButton, 43);
-  checkButton(10, zlButton, lastZlButton, 41);
-  checkButton(18, zrButton, lastZrButton, 42);
-  checkHomeButton();
-  checkMinusPlus();
-  joyEffects();
+  classic1.readData();
+  checkButtonClassic(8, xButtonClassic, lastXButtonClassic, 38);
+  checkButtonClassic(9, yButtonClassic, lastYButtonClassic, 39);
+  checkButtonClassic(12, aButtonClassic, lastAButtonClassic, 36);
+  checkButtonClassic(13, bButtonClassic, lastBButtonClassic, 37);
+  checkButtonClassic(11, lButtonClassic, lastLButtonClassic, 40);
+  checkButtonClassic(17, rButtonClassic, lastRButtonClassic, 43);
+  checkButtonClassic(10, zlButtonClassic, lastZlButtonClassic, 41);
+  checkButtonClassic(18, zrButtonClassic, lastZrButtonClassic, 42);
+  checkHomeButtonClassic();
+  checkMinusPlusClassic();
+  joyEffectsClassic();
 }
 
-void checkButton(int buttonNum, int &buttonVal, int &lastButtonVal, int note) {
-  buttonVal = nunchuck1.values[buttonNum];
+void checkButtonClassic(int buttonNum, int &buttonVal, int &lastButtonVal, int note) {
+  buttonVal = classic1.values[buttonNum];
   if (buttonVal == 255 and buttonVal != lastButtonVal) {
     usbMIDI.sendNoteOn(note, 127, 1);
     delay(5);
@@ -69,77 +61,76 @@ void checkButton(int buttonNum, int &buttonVal, int &lastButtonVal, int note) {
   lastButtonVal = buttonVal;
 }
 
-void checkHomeButton() {
-  homeButtonVal = nunchuck1.values[15];
-  if (homeButtonVal == 255 and lastHomeButtonVal != homeButtonVal) {
-    directionSwitch = ! directionSwitch;
+void checkHomeButtonClassic() {
+  homeButtonValClassic = classic1.values[15];
+  if (homeButtonValClassic == 255 and lastHomeButtonValClassic != homeButtonValClassic) {
+    directionSwitchClassic = ! directionSwitchClassic;
   }
-  lastHomeButtonVal = homeButtonVal;
+  lastHomeButtonValClassic = homeButtonValClassic;
 }
 
-void checkMinusPlus() {
-  if (nunchuck1.values[14] == 0) {
-    if (directionSwitch == true) {
-      usbMIDI.sendControlChange(1, joyLeftXVal, 0);
+void checkMinusPlusClassic() {
+  if (classic1.values[14] == 0) {
+    if (directionSwitchClassic == true) {
+      usbMIDI.sendControlChange(1, joyLeftXValClassic, 0);
     } else {
-      usbMIDI.sendControlChange(2, joyLeftYVal, 0);
+      usbMIDI.sendControlChange(2, joyLeftYValClassic, 0);
     }
   }
-  if (nunchuck1.values[14] == 255) {
-    if (directionSwitch == true) {
-      usbMIDI.sendControlChange(3, joyRightXVal, 0);
+  if (classic1.values[14] == 255) {
+    if (directionSwitchClassic == true) {
+      usbMIDI.sendControlChange(3, joyRightXValClassic, 0);
     } else {
-      usbMIDI.sendControlChange(4, joyRightYVal, 0);
+      usbMIDI.sendControlChange(4, joyRightYValClassic, 0);
     }
   }
 }
 
-void joyEffects() {
-  if (nunchuck1.values[0] >= 132 or nunchuck1.values[0] <= 124) {
-    joyLeftXVal = joyLeftXVal + map(nunchuck1.values[0], 0, 256, -15, 15);
-    if (joyLeftXVal > 127) {
-      joyLeftXVal = 127;
+void joyEffectsClassic() {
+  if (classic1.values[0] >= 132 or classic1.values[0] <= 124 or classic1.values[1] >= 132 or classic1.values[1] <= 124 or classic1.values[2] >= 132 or classic1.values[2] <= 124 or classic1.values[3] >= 132 or classic1.values[3] <= 124) {
+    if (classic1.values[0] >= 132 or classic1.values[0] <= 124) {
+      joyLeftXValClassic = joyLeftXValClassic + map(classic1.values[0], 0, 256, -15, 15);
+      if (joyLeftXValClassic > 127) {
+        joyLeftXValClassic = 127;
+      }
+      if (joyLeftXValClassic < 0) {
+        joyLeftXValClassic = 0;
+      }
+      usbMIDI.sendControlChange(1, joyLeftXValClassic, 0);
     }
-    if (joyLeftXVal < 0) {
-      joyLeftXVal = 0;
-    }
-    usbMIDI.sendControlChange(1, joyLeftXVal, 0);
-    delay(25);
-  }
 
-  if (nunchuck1.values[1] >= 132 or nunchuck1.values[1] <= 124) {
-    joyLeftYVal = joyLeftYVal + map(nunchuck1.values[1], 0, 256, -15, 15);
-    if (joyLeftYVal > 127) {
-      joyLeftYVal = 127;
+    if (classic1.values[1] >= 132 or classic1.values[1] <= 124) {
+      joyLeftYValClassic = joyLeftYValClassic + map(classic1.values[1], 0, 256, -15, 15);
+      if (joyLeftYValClassic > 127) {
+        joyLeftYValClassic = 127;
+      }
+      if (joyLeftYValClassic < 0) {
+        joyLeftYValClassic = 0;
+      }
+      usbMIDI.sendControlChange(2, joyLeftYValClassic, 0);
     }
-    if (joyLeftYVal < 0) {
-      joyLeftYVal = 0;
-    }
-    usbMIDI.sendControlChange(2, joyLeftYVal, 0);
-    delay(25);
-  }
 
-  if (nunchuck1.values[2] >= 132 or nunchuck1.values[2] <= 124) {
-    joyRightXVal = joyRightXVal + map(nunchuck1.values[2], 0, 256, -15, 15);
-    if (joyRightXVal > 127) {
-      joyRightXVal = 127;
+    if (classic1.values[2] >= 132 or classic1.values[2] <= 124) {
+      joyRightXValClassic = joyRightXValClassic + map(classic1.values[2], 0, 256, -15, 15);
+      if (joyRightXValClassic > 127) {
+        joyRightXValClassic = 127;
+      }
+      if (joyRightXValClassic < 0) {
+        joyRightXValClassic = 0;
+      }
+      usbMIDI.sendControlChange(3, joyRightXValClassic, 0);
     }
-    if (joyRightXVal < 0) {
-      joyRightXVal = 0;
-    }
-    usbMIDI.sendControlChange(3, joyRightXVal, 0);
-    delay(25);
-  }
 
-  if (nunchuck1.values[3] >= 132 or nunchuck1.values[3] <= 124) {
-    joyRightYVal = joyRightYVal + map(nunchuck1.values[3], 0, 256, -15, 15);
-    if (joyRightYVal > 127) {
-      joyRightYVal = 127;
+    if (classic1.values[3] >= 132 or classic1.values[3] <= 124) {
+      joyRightYValClassic = joyRightYValClassic + map(classic1.values[3], 0, 256, -15, 15);
+      if (joyRightYValClassic > 127) {
+        joyRightYValClassic = 127;
+      }
+      if (joyRightYValClassic < 0) {
+        joyRightYValClassic = 0;
+      }
+      usbMIDI.sendControlChange(4, joyRightYValClassic, 0);
     }
-    if (joyRightYVal < 0) {
-      joyRightYVal = 0;
-    }
-    usbMIDI.sendControlChange(4, joyRightYVal, 0);
     delay(25);
   }
 }
