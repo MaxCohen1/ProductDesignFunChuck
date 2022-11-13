@@ -1,209 +1,209 @@
 #include <WiiChuck.h>
-Accessory nunchuck1;
+Accessory guitar1;
 
-int greenState = 0;
-int redState = 0;
-int yellowState = 0;
-int blueState = 0;
-int orangeState = 0;
+int greenStateGuitar = 0;
+int redStateGuitar = 0;
+int yellowStateGuitar = 0;
+int blueStateGuitar = 0;
+int orangeStateGuitar = 0;
 
-int lastGreenState = 0;
-int lastRedState = 0;
-int lastYellowState = 0;
-int lastBlueState = 0;
-int lastOrangeState = 0;
+int lastGreenStateGuitar = 0;
+int lastRedStateGuitar = 0;
+int lastYellowStateGuitar = 0;
+int lastBlueStateGuitar = 0;
+int lastOrangeStateGuitar = 0;
 
-int greenNote = 60;
-int redNote = 64;
-int yellowNote = 67;
-int blueNote = 71;
-int orangeNote = 72;
+int greenNoteGuitar = 60;
+int redNoteGuitar = 64;
+int yellowNoteGuitar = 67;
+int blueNoteGuitar = 71;
+int orangeNoteGuitar = 72;
 
-int strum = 128;
-int lastStrum = 128;
+int strumGuitar = 128;
+int lastStrumGuitar = 128;
 
-int plusMinus = 128;
-int lastPlusMinus = 128;
+int plusMinusGuitar = 128;
+int lastPlusMinusGuitar = 128;
 
 void setup() {
   Serial.begin(9600);
-  nunchuck1.begin();
-  nunchuck1.type = GuitarHeroController;
+  guitar1.begin();
+  guitar1.type = GuitarHeroController;
 }
 
 void loop() {
-  nunchuck1.readData();
-  checkStrum();
-  checkPlusMinus();
+  guitar1.readData();
+  checkStrumGuitar();
+  checkPlusMinusGuitar();
 }
 
-void checkPlusMinus() {
-  plusMinus = nunchuck1.values[6];
-  if (plusMinus == 255 and lastPlusMinus != plusMinus) {
+void checkPlusMinusGuitar() {
+  plusMinusGuitar = guitar1.values[6];
+  if (plusMinusGuitar == 255 and lastPlusMinusGuitar != plusMinusGuitar) {
 
-    if (nunchuck1.values[10] == 255) {
-      usbMIDI.sendNoteOff(greenNote, 127, 1);
-      greenNote = greenNote + 1;
-      if (strum == 255 or strum == 0) {
-        usbMIDI.sendNoteOn(greenNote, 127, 1);
+    if (guitar1.values[10] == 255) {
+      usbMIDI.sendNoteOff(greenNoteGuitar, 127, 1);
+      greenNoteGuitar = greenNoteGuitar + 1;
+      if (strumGuitar == 255 or strumGuitar == 0) {
+        usbMIDI.sendNoteOn(greenNoteGuitar, 127, 1);
       }
     }
-    if (nunchuck1.values[11] == 255) {
-      usbMIDI.sendNoteOff(redNote, 127, 1);
-      redNote = redNote + 1;
-      if (strum == 255 or strum == 0) {
-        usbMIDI.sendNoteOn(redNote, 127, 1);
+    if (guitar1.values[11] == 255) {
+      usbMIDI.sendNoteOff(redNoteGuitar, 127, 1);
+      redNoteGuitar = redNoteGuitar + 1;
+      if (strumGuitar == 255 or strumGuitar == 0) {
+        usbMIDI.sendNoteOn(redNoteGuitar, 127, 1);
       }
     }
-    if (nunchuck1.values[12] == 255) {
-      usbMIDI.sendNoteOff(yellowNote, 127, 1);
-      yellowNote = yellowNote + 1;
-      if (strum == 255 or strum == 0) {
-        usbMIDI.sendNoteOn(yellowNote, 127, 1);
+    if (guitar1.values[12] == 255) {
+      usbMIDI.sendNoteOff(yellowNoteGuitar, 127, 1);
+      yellowNoteGuitar = yellowNoteGuitar + 1;
+      if (strumGuitar == 255 or strumGuitar == 0) {
+        usbMIDI.sendNoteOn(yellowNoteGuitar, 127, 1);
       }
     }
-    if (nunchuck1.values[13] == 255) {
-      usbMIDI.sendNoteOff(blueNote, 127, 1);
-      blueNote = blueNote + 1;
-      if (strum == 255 or strum == 0) {
-        usbMIDI.sendNoteOn(blueNote, 127, 1);
+    if (guitar1.values[13] == 255) {
+      usbMIDI.sendNoteOff(blueNoteGuitar, 127, 1);
+      blueNoteGuitar = blueNoteGuitar + 1;
+      if (strumGuitar == 255 or strumGuitar == 0) {
+        usbMIDI.sendNoteOn(blueNoteGuitar, 127, 1);
       }
     }
-    if (nunchuck1.values[14] == 255) {
-      usbMIDI.sendNoteOff(orangeNote, 127, 1);
-      orangeNote = orangeNote + 1;
-      if (strum == 255 or strum == 0) {
-        usbMIDI.sendNoteOn(orangeNote, 127, 1);
+    if (guitar1.values[14] == 255) {
+      usbMIDI.sendNoteOff(orangeNoteGuitar, 127, 1);
+      orangeNoteGuitar = orangeNoteGuitar + 1;
+      if (strumGuitar == 255 or strumGuitar == 0) {
+        usbMIDI.sendNoteOn(orangeNoteGuitar, 127, 1);
       }
     }
   }
 
-  if (plusMinus == 0 and lastPlusMinus != plusMinus) {
-    if (nunchuck1.values[10] == 255) {
-      usbMIDI.sendNoteOff(greenNote, 127, 1);
-      greenNote = greenNote - 1;
-      if (strum == 255 or strum == 0) {
-        usbMIDI.sendNoteOn(greenNote, 127, 1);
+  if (plusMinusGuitar == 0 and lastPlusMinusGuitar != plusMinusGuitar) {
+    if (guitar1.values[10] == 255) {
+      usbMIDI.sendNoteOff(greenNoteGuitar, 127, 1);
+      greenNoteGuitar = greenNoteGuitar - 1;
+      if (strumGuitar == 255 or strumGuitar == 0) {
+        usbMIDI.sendNoteOn(greenNoteGuitar, 127, 1);
       }
     }
-    if (nunchuck1.values[11] == 255) {
-      usbMIDI.sendNoteOff(redNote, 127, 1);
-      redNote = redNote - 1;
-      if (strum == 255 or strum == 0) {
-        usbMIDI.sendNoteOn(redNote, 127, 1);
+    if (guitar1.values[11] == 255) {
+      usbMIDI.sendNoteOff(redNoteGuitar, 127, 1);
+      redNoteGuitar = redNoteGuitar - 1;
+      if (strumGuitar == 255 or strumGuitar == 0) {
+        usbMIDI.sendNoteOn(redNoteGuitar, 127, 1);
       }
     }
-    if (nunchuck1.values[12] == 255) {
-      usbMIDI.sendNoteOff(yellowNote, 127, 1);
-      yellowNote = yellowNote - 1;
-      if (strum == 255 or strum == 0) {
-        usbMIDI.sendNoteOn(yellowNote, 127, 1);
+    if (guitar1.values[12] == 255) {
+      usbMIDI.sendNoteOff(yellowNoteGuitar, 127, 1);
+      yellowNoteGuitar = yellowNoteGuitar - 1;
+      if (strumGuitar == 255 or strumGuitar == 0) {
+        usbMIDI.sendNoteOn(yellowNoteGuitar, 127, 1);
       }
     }
-    if (nunchuck1.values[13] == 255) {
-      usbMIDI.sendNoteOff(blueNote, 127, 1);
-      blueNote = blueNote - 1;
-      if (strum == 255 or strum == 0) {
-        usbMIDI.sendNoteOn(blueNote, 127, 1);
+    if (guitar1.values[13] == 255) {
+      usbMIDI.sendNoteOff(blueNoteGuitar, 127, 1);
+      blueNoteGuitar = blueNoteGuitar - 1;
+      if (strumGuitar == 255 or strumGuitar == 0) {
+        usbMIDI.sendNoteOn(blueNoteGuitar, 127, 1);
       }
     }
-    if (nunchuck1.values[14] == 255) {
-      usbMIDI.sendNoteOff(orangeNote, 127, 1);
-      orangeNote = orangeNote - 1;
-      if (strum == 255 or strum == 0) {
-        usbMIDI.sendNoteOn(orangeNote, 127, 1);
+    if (guitar1.values[14] == 255) {
+      usbMIDI.sendNoteOff(orangeNoteGuitar, 127, 1);
+      orangeNoteGuitar = orangeNoteGuitar - 1;
+      if (strumGuitar == 255 or strumGuitar == 0) {
+        usbMIDI.sendNoteOn(orangeNoteGuitar, 127, 1);
       }
     }
   }
 
-  lastPlusMinus = plusMinus;
+  lastPlusMinusGuitar = plusMinusGuitar;
 }
 
-void checkStrum() {
-  strum = nunchuck1.values[7];
-  if (strum == 255 or strum == 0) {
-    checkGreen();
-    checkRed();
-    checkYellow();
-    checkBlue();
-    checkOrange();
+void checkStrumGuitar() {
+  strumGuitar = guitar1.values[7];
+  if (strumGuitar == 255 or strumGuitar == 0) {
+    checkGreenGuitar();
+    checkRedGuitar();
+    checkYellowGuitar();
+    checkBlueGuitar();
+    checkOrangeGuitar();
   }
-  if ((lastStrum == 255 or lastStrum == 0) and lastStrum != strum) {
-    usbMIDI.sendNoteOff(greenNote, 127, 1);
-    usbMIDI.sendNoteOff(redNote, 127, 1);
-    usbMIDI.sendNoteOff(yellowNote, 127, 1);
-    usbMIDI.sendNoteOff(blueNote, 127, 1);
-    usbMIDI.sendNoteOff(orangeNote, 127, 1);
-    lastGreenState = 0;
-    lastRedState = 0;
-    lastYellowState = 0;
-    lastBlueState = 0;
-    lastOrangeState = 0;
+  if ((lastStrumGuitar == 255 or lastStrumGuitar == 0) and lastStrumGuitar != strumGuitar) {
+    usbMIDI.sendNoteOff(greenNoteGuitar, 127, 1);
+    usbMIDI.sendNoteOff(redNoteGuitar, 127, 1);
+    usbMIDI.sendNoteOff(yellowNoteGuitar, 127, 1);
+    usbMIDI.sendNoteOff(blueNoteGuitar, 127, 1);
+    usbMIDI.sendNoteOff(orangeNoteGuitar, 127, 1);
+    lastGreenStateGuitar = 0;
+    lastRedStateGuitar = 0;
+    lastYellowStateGuitar = 0;
+    lastBlueStateGuitar = 0;
+    lastOrangeStateGuitar = 0;
   }
-  lastStrum = strum;
+  lastStrumGuitar = strumGuitar;
 }
 
-void checkGreen() {
-  greenState = nunchuck1.values[10];
-  if (greenState == 255 and greenState != lastGreenState) {
-    usbMIDI.sendNoteOn(greenNote, 127, 1);
+void checkGreenGuitar() {
+  greenStateGuitar = guitar1.values[10];
+  if (greenStateGuitar == 255 and greenStateGuitar != lastGreenStateGuitar) {
+    usbMIDI.sendNoteOn(greenNoteGuitar, 127, 1);
     delay(5);
   }
-  if (greenState == 0 and greenState != lastGreenState) {
-    usbMIDI.sendNoteOff(greenNote, 127, 1);
+  if (greenStateGuitar == 0 and greenStateGuitar != lastGreenStateGuitar) {
+    usbMIDI.sendNoteOff(greenNoteGuitar, 127, 1);
     delay(5);
   }
-  lastGreenState = greenState;
+  lastGreenStateGuitar = greenStateGuitar;
 }
 
-void checkRed() {
-  redState = nunchuck1.values[11];
-  if (redState == 255 and redState != lastRedState) {
-    usbMIDI.sendNoteOn(redNote, 127, 1);
+void checkRedGuitar() {
+  redStateGuitar = guitar1.values[11];
+  if (redStateGuitar == 255 and redStateGuitar != lastRedStateGuitar) {
+    usbMIDI.sendNoteOn(redNoteGuitar, 127, 1);
     delay(5);
   }
-  if (redState == 0 and redNote != lastRedState) {
-    usbMIDI.sendNoteOff(redNote, 127, 1);
+  if (redStateGuitar == 0 and redNoteGuitar != lastRedStateGuitar) {
+    usbMIDI.sendNoteOff(redNoteGuitar, 127, 1);
     delay(5);
   }
-  lastRedState = redState;
+  lastRedStateGuitar = redStateGuitar;
 }
 
-void checkYellow() {
-  yellowState = nunchuck1.values[12];
-  if (yellowState == 255 and yellowState != lastYellowState) {
-    usbMIDI.sendNoteOn(yellowNote, 127, 1);
+void checkYellowGuitar() {
+  yellowStateGuitar = guitar1.values[12];
+  if (yellowStateGuitar == 255 and yellowStateGuitar != lastYellowStateGuitar) {
+    usbMIDI.sendNoteOn(yellowNoteGuitar, 127, 1);
     delay(5);
   }
-  if (yellowState == 0 and yellowState != lastYellowState) {
-    usbMIDI.sendNoteOff(yellowNote, 127, 1);
+  if (yellowStateGuitar == 0 and yellowStateGuitar != lastYellowStateGuitar) {
+    usbMIDI.sendNoteOff(yellowNoteGuitar, 127, 1);
     delay(5);
   }
-  lastYellowState = yellowState;
+  lastYellowStateGuitar = yellowStateGuitar;
 }
 
-void checkBlue() {
-  blueState = nunchuck1.values[13];
-  if (blueState == 255 and blueState != lastBlueState) {
-    usbMIDI.sendNoteOn(blueNote, 127, 1);
+void checkBlueGuitar() {
+  blueStateGuitar = guitar1.values[13];
+  if (blueStateGuitar == 255 and blueStateGuitar != lastBlueStateGuitar) {
+    usbMIDI.sendNoteOn(blueNoteGuitar, 127, 1);
     delay(5);
   }
-  if (blueState == 0 and blueState != lastBlueState) {
-    usbMIDI.sendNoteOff(blueNote, 127, 1);
+  if (blueStateGuitar == 0 and blueStateGuitar != lastBlueStateGuitar) {
+    usbMIDI.sendNoteOff(blueNoteGuitar, 127, 1);
     delay(5);
   }
-  lastBlueState = blueState;
+  lastBlueStateGuitar = blueStateGuitar;
 }
 
-void checkOrange() {
-  orangeState = nunchuck1.values[14];
-  if (orangeState == 255 and orangeState != lastOrangeState) {
-    usbMIDI.sendNoteOn(orangeNote, 127, 1);
+void checkOrangeGuitar() {
+  orangeStateGuitar = guitar1.values[14];
+  if (orangeStateGuitar == 255 and orangeStateGuitar != lastOrangeStateGuitar) {
+    usbMIDI.sendNoteOn(orangeNoteGuitar, 127, 1);
     delay(5);
   }
-  if (orangeState == 0 and orangeState != lastOrangeState) {
-    usbMIDI.sendNoteOff(orangeNote, 127, 1);
+  if (orangeStateGuitar == 0 and orangeStateGuitar != lastOrangeStateGuitar) {
+    usbMIDI.sendNoteOff(orangeNoteGuitar, 127, 1);
     delay(5);
   }
-  lastOrangeState = orangeState;
+  lastOrangeStateGuitar = orangeStateGuitar;
 }
