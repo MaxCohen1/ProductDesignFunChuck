@@ -92,9 +92,9 @@ int lastPlusMinusGuitar = 128;
 void setup() {
   Serial.begin(9600);
 
-  pinMode(modeButton, INPUT);
-  pinMode(button1, INPUT);
-  pinMode(button2, INPUT);
+  pinMode(modeButton, INPUT_PULLUP);
+  pinMode(button1, INPUT_PULLUP);
+  pinMode(button2, INPUT_PULLUP);
   pinMode(switchPin, INPUT);
 
   nunchuck1.begin();
@@ -117,7 +117,7 @@ void loop() {
 }
 
 void checkMode() {
-  if (digitalRead(modeButton) == HIGH and lastModeState == LOW) {
+  if (digitalRead(modeButton) == LOW and lastModeState == HIGH) {
     currentMode = currentMode + 1;
     if (currentMode > 2) {
       currentMode = 0;
@@ -202,17 +202,17 @@ void checkPitchNun() {
 
 void setEffectsNun() {
   if (digitalRead(switchPin) == LOW) {
-    if (digitalRead(button1) == HIGH) {
+    if (digitalRead(button1) == LOW) {
       usbMIDI.sendControlChange(1, rollValue, 0);
     }
-    if (digitalRead(button2) == HIGH) {
+    if (digitalRead(button2) == LOW) {
       usbMIDI.sendControlChange(2, pitchValue, 0);
     }
   } else {
-    if (digitalRead(button1) == HIGH) {
+    if (digitalRead(button1) == LOW) {
       usbMIDI.sendControlChange(3, xJoyEffectValNun, 0);
     }
-    if (digitalRead(button2) == HIGH) {
+    if (digitalRead(button2) == LOW) {
       usbMIDI.sendControlChange(4, yJoyEffectValNun, 0);
     }
   }
