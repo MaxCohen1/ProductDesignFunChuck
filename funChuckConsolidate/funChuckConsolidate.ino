@@ -396,6 +396,7 @@ void guitarMode() {
   guitar1.readData();
   checkStrumGuitar();
   checkPlusMinusGuitar();
+  resetGuitar();
 }
 
 void checkPlusMinusGuitar() {
@@ -567,4 +568,19 @@ void checkOrangeGuitar() {
     delay(5);
   }
   lastOrangeStateGuitar = orangeStateGuitar;
+}
+
+void resetGuitar() {
+  if (digitalRead(button1) == LOW) {
+    usbMIDI.sendNoteOff(greenNoteGuitar, 127, 1);
+    usbMIDI.sendNoteOff(redNoteGuitar, 127, 1);
+    usbMIDI.sendNoteOff(yellowNoteGuitar, 127, 1);
+    usbMIDI.sendNoteOff(blueNoteGuitar, 127, 1);
+    usbMIDI.sendNoteOff(orangeNoteGuitar, 127, 1);
+    greenNoteGuitar = 60;
+    redNoteGuitar = 64;
+    yellowNoteGuitar = 67;
+    blueNoteGuitar = 71;
+    orangeNoteGuitar = 72;
+  }
 }
